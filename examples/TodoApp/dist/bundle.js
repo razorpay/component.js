@@ -86,6 +86,22 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "../index.js":
+/*!*******************!*\
+  !*** ../index.js ***!
+  \*******************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var Component = __webpack_require__(/*! ./src */ "../src/index.js");
+
+module.exports = Component.default || Component;
+
+/***/ }),
+
 /***/ "../src/index.js":
 /*!***********************!*\
   !*** ../src/index.js ***!
@@ -305,9 +321,9 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _src = __webpack_require__(/*! ../../../src */ "../src/index.js");
+var _component = __webpack_require__(/*! component */ "../index.js");
 
-var _src2 = _interopRequireDefault(_src);
+var _component2 = _interopRequireDefault(_component);
 
 __webpack_require__(/*! ./styles.styl */ "./TodoApp/TodoFooter/styles.styl");
 
@@ -415,7 +431,7 @@ var TodoFooter = function (_Component) {
   }]);
 
   return TodoFooter;
-}(_src2.default);
+}(_component2.default);
 
 exports.default = TodoFooter;
 
@@ -448,9 +464,9 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _src = __webpack_require__(/*! ../../../src */ "../src/index.js");
+var _component = __webpack_require__(/*! component */ "../index.js");
 
-var _src2 = _interopRequireDefault(_src);
+var _component2 = _interopRequireDefault(_component);
 
 __webpack_require__(/*! ./styles.styl */ "./TodoApp/TodoInput/styles.styl");
 
@@ -535,7 +551,7 @@ var TodoInput = function (_Component) {
   }]);
 
   return TodoInput;
-}(_src2.default);
+}(_component2.default);
 
 exports.default = TodoInput;
 
@@ -568,9 +584,9 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _src = __webpack_require__(/*! ../../../../src */ "../src/index.js");
+var _component = __webpack_require__(/*! component */ "../index.js");
 
-var _src2 = _interopRequireDefault(_src);
+var _component2 = _interopRequireDefault(_component);
 
 __webpack_require__(/*! ./styles.styl */ "./TodoApp/TodoList/Todo/styles.styl");
 
@@ -680,7 +696,7 @@ var Todo = function (_Component) {
   }]);
 
   return Todo;
-}(_src2.default);
+}(_component2.default);
 
 exports.default = Todo;
 
@@ -715,9 +731,9 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _src = __webpack_require__(/*! ../../../src */ "../src/index.js");
+var _component = __webpack_require__(/*! component */ "../index.js");
 
-var _src2 = _interopRequireDefault(_src);
+var _component2 = _interopRequireDefault(_component);
 
 var _Todo = __webpack_require__(/*! ./Todo */ "./TodoApp/TodoList/Todo/index.js");
 
@@ -901,7 +917,7 @@ var TodoList = function (_Component) {
   }]);
 
   return TodoList;
-}(_src2.default);
+}(_component2.default);
 
 exports.default = TodoList;
 
@@ -930,9 +946,9 @@ exports.default = TodoList;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _src = __webpack_require__(/*! ../../src */ "../src/index.js");
+var _component = __webpack_require__(/*! component */ "../index.js");
 
-var _src2 = _interopRequireDefault(_src);
+var _component2 = _interopRequireDefault(_component);
 
 var _TodoInput = __webpack_require__(/*! ./TodoInput */ "./TodoApp/TodoInput/index.js");
 
@@ -1083,7 +1099,7 @@ var TodoApp = function (_Component) {
   }]);
 
   return TodoApp;
-}(_src2.default);
+}(_component2.default);
 
 var todoApp = new TodoApp({}, document.body);
 

@@ -1,4 +1,4 @@
-import Component from "../../../src";
+import Component from "component";
 import Todo from "./Todo";
 
 import "./styles.styl";

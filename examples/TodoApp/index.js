@@ -1,4 +1,4 @@
-import Component from "../../src";
+import Component from "component";
 import TodoInput from "./TodoInput";
 import TodoList from "./TodoList";
 import TodoFooter from "./TodoFooter";

@@ -54,5 +54,10 @@ module.exports = {
     minimizer:[
       new OptimizeCSSAssetsPlugin({})
     ]
+  },
+  resolve: {
+    alias: {
+      "component": path.resolve(__dirname, "../index")
+    }
   }
 };

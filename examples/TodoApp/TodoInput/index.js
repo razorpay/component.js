@@ -1,4 +1,4 @@
-import Component from "../../../src";
+import Component from "component";
 
 import "./styles.styl";
 
