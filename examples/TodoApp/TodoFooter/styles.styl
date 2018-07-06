@@ -1,0 +1,42 @@
+.todo-footer {
+
+  display: table;
+  width: 100%;
+  padding-top: 0.5em;
+  margin-top: 0.5em;
+  border-top: 1px solid rgba(0, 0, 0, 0.2);  
+
+  > div {
+
+    display: table-cell;
+    white-space: nowrap;
+    width: (100/3)%;
+    text-align: center;
+    font-size: 0.85em;
+    color: rgba(0, 0, 0, 0.5);
+
+    &:last-child {
+
+      text-align: right;
+      cursor: pointer;
+    }
+
+    &:first-child {
+
+      text-align: left;
+    }
+  }
+
+  .statuses .status {
+
+    display: inline-block;
+    margin-right: 10px;
+    cursor: pointer;
+
+    &.active {
+
+      text-decoration: underline;
+      color: #4baad3;
+    }
+  }
+}
