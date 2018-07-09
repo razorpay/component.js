@@ -26,17 +26,17 @@ class TodoApp extends Component {
   toggleHasTodosClass () {
   
     const hasTodos = this.todoList.todos.length > 0;
-	let className = this.$el.className;
+    let className = this.$el.className;
 
-	if (hasTodos) {
-	
+    if (hasTodos) {
+    
       className = `${className}${hasTodosClassName}`;
-	} else {
-	
-	  className = className.replace(hasTodosClassName, "");
-	}
+    } else {
+    
+      className = className.replace(hasTodosClassName, "");
+    }
 
-	this.$el.className = className;
+    this.$el.className = className;
   }
 
   handleStatusChange (status) {
@@ -63,7 +63,7 @@ class TodoApp extends Component {
     if (!todosLength) {
     
       this.todoInput.setCheckAll(false);
-	  this.toggleHasTodosClass();
+      this.toggleHasTodosClass();
     }
   }
 
@@ -74,10 +74,10 @@ class TodoApp extends Component {
     this.todoList.addTodo({text});
     this.todoFooter.updateNumTodos(this.todoList.length);
 
-	if (!prevTodosLength) {
-	
-	  this.toggleHasTodosClass();
-	}
+    if (!prevTodosLength) {
+    
+      this.toggleHasTodosClass();
+    }
   }
 
   handleCheckAllChange (isChecked) {

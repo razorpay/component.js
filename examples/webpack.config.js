@@ -56,8 +56,6 @@ module.exports = {
     ]
   },
   resolve: {
-    alias: {
-      "component": path.resolve(__dirname, "../index")
-    }
+    modules: ['node_modules']
   }
 };
