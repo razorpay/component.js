@@ -17,7 +17,7 @@ class TodoFooter extends Component {
 
   componentWillMount () {
   
-    this.$statuses = this.$el.querySelectorAll(".status");
+    this.$statuses = this.$$(".status");
     this.$statuses.forEach(($status, index) => {
     
       var statusText = this.statuses[index];
@@ -25,19 +25,19 @@ class TodoFooter extends Component {
       $status.onclick = this.handleStatusClick.bind(this, statusText, index);
     });
 
-    this.$el.querySelector(".clear-completed").onclick = this.handleClearCompleted;
+    this.$(".clear-completed").onclick = this.handleClearCompleted;
   }
 
   updateNumTodos (count) {
     
-    this.$counter = this.$counter || this.$el.querySelector(".counter");
+    this.$counter = this.$counter || this.$(".counter");
     this.$counter.innerText = count;
   }
 
   updateNumVisibleTodos (count) {
 
     this.$visibleTodosCounter = this.$visibleTodosCounter ||
-                                this.$el.querySelector(".visible-todos-counter");
+                                this.$(".visible-todos-counter");
 
     this.$visibleTodosCounter.innerText = count;
   }

@@ -97,7 +97,7 @@ class TodoApp extends Component {
         onSubmit: this.handleNewTodo,
         onCheckAllChange: this.handleCheckAllChange
       },
-      this.$el.querySelector(".todo-input-container")
+      this.$(".todo-input-container")
     );
     this.todoList = new TodoList(
       {
@@ -106,7 +106,7 @@ class TodoApp extends Component {
         onRemoveTodo: this.handleRemoveTodo,
         status: this.selectedStatus
       },
-      this.$el.querySelector(".todo-list-container")
+      this.$(".todo-list-container")
     );
     this.todoFooter = new TodoFooter(
       {
@@ -115,7 +115,7 @@ class TodoApp extends Component {
         onStatusChange: this.handleStatusChange,
         onClearCompleted: this.handleClearCompleted
       },
-      this.$el.querySelector(".todo-footer-container")
+      this.$(".todo-footer-container")
     );
   }
 
