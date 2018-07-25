@@ -104,7 +104,7 @@ class Component {
     return this;
   }
 
-  $(selector)  {
+  $(selector) {
   
     return this.$el && this.$el.querySelector(selector) || null; 
   }
