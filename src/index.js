@@ -104,6 +104,16 @@ class Component {
     return this;
   }
 
+  $(selector)  {
+  
+    return this.$el && this.$el.querySelector(selector) || null; 
+  }
+
+  $$(selector) {
+  
+    return this.$el && this.$el.querySelectorAll(selector) || null;
+  }
+
   appendTo (container) {
 
     return this.onRender(() => {

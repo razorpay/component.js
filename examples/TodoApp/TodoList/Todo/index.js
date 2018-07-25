@@ -69,7 +69,7 @@ class Todo extends Component {
   
     const {completed} = this;
 
-    this.checkbox = this.$el.querySelector("[type='checkbox']");
+    this.checkbox = this.$("[type='checkbox']");
 
     if (completed) {
 
@@ -78,7 +78,7 @@ class Todo extends Component {
 
     this.checkbox.onchange = this.handleStatusChange;
 
-    this.$el.querySelector(".close").onclick = this.handleRemove;
+    this.$(".close").onclick = this.handleRemove;
   }
 
   render () {
