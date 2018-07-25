@@ -138,24 +138,20 @@ var Component = function () {
 
         (_$el2 = this.$el).removeEventListener.apply(_$el2, arguments);
       }
-    }, {
-      key: "$",
-      value: function $(selector) {
-
-        return this.$el && this.$el.querySelector(selector) || null;
-      }
-    }, {
-      key: "$$",
-      value: function $$(selector) {
-
-        return this.$el && this.$el.querySelectorAll(selector) || null;
-      }
-    }, {
-      key: "appendTo",
-      value: function appendTo(container) {
-        var _this2 = this;
 
       return this;
+    }
+  }, {
+    key: "$",
+    value: function $(selector) {
+
+      return this.$el && this.$el.querySelector(selector) || null;
+    }
+  }, {
+    key: "$$",
+    value: function $$(selector) {
+
+      return this.$el && this.$el.querySelectorAll(selector) || null;
     }
   }, {
     key: "appendTo",
