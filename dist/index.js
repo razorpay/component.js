@@ -28,7 +28,11 @@ function deepFreeze(object) {
 
       var value = object[name];
 
-      object[name] = value && (typeof value === "undefined" ? "undefined" : _typeof(value)) === "object" ? deepFreeze(value) : value;
+      try {
+        object[name] = value;
+      } catch (e) {/* the prop is not writable */}
+
+      value && (typeof value === "undefined" ? "undefined" : _typeof(value)) === "object" ? deepFreeze(value) : value;
     }
   } catch (err) {
     _didIteratorError = true;

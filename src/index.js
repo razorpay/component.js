@@ -13,7 +13,11 @@ function deepFreeze(object) {
   for (let name of propNames) {
     let value = object[name];
 
-    object[name] = value && typeof value === "object" ? 
+    try {
+      object[name] = value
+    } catch (e) { /* the prop is not writable */}
+          
+    value && typeof value === "object" ? 
       deepFreeze(value) : value;
   }
 
