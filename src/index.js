@@ -11,14 +11,15 @@ function deepFreeze(object) {
   var propNames = Object.getOwnPropertyNames(object);
 
   for (let name of propNames) {
+
     let value = object[name];
 
     try {
+
       object[name] = value
     } catch (e) { /* the prop is not writable */}
           
-    value && typeof value === "object" ? 
-      deepFreeze(value) : value;
+    value && typeof value === "object" ? deepFreeze(value) : value;
   }
 
   return Object.freeze(object);
@@ -51,9 +52,7 @@ class Component {
         Object.defineProperty(this, "$el", {value: $el});
 
         this.rendered = true;
-
         this.__renderSubscribers.forEach((fn) => fn());
-
         this.__renderSubscribers = [];
 
         if (!$el) {
@@ -62,7 +61,9 @@ class Component {
         }
 
         Object.defineProperty(this, "$container", {
+
           get() {
+
             return $el.parentElement;
           }
         });
@@ -83,9 +84,9 @@ class Component {
     } else {
 
       this.__renderSubscribers.push(fn);
-	}
+    }
 
-	return this;
+    return this;
   }
 
   addEventListener(...args) {
