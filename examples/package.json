@@ -26,6 +26,6 @@
     "webpack-dev-server": "^3.1.4"
   },
   "dependencies": {
-    "component": "git+ssh://git@github.com/razorpay/component.js.git"
+    "component": "git+https://github.com/razorpay/component.js.git"
   }
 }
