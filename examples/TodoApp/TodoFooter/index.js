@@ -13,18 +13,18 @@ class TodoFooter extends Component {
     this.statuses = this.props.statuses || [];
     this.selectedStatus = this.props.selectedStatus || this.statuses[0];
     this.handleClearCompleted = this.handleClearCompleted.bind(this);
+    this.updateNumTodos = this.updateNumTodos.bind(this);
+    this.updateNumVisibleTodos = this.updateNumVisibleTodos.bind(this);
   }
 
-  componentWillMount () {
+  ready () {
   
     this.$statuses = this.$$(".status");
     this.$statuses.forEach(($status, index) => {
     
       var statusText = this.statuses[index];
-
       $status.onclick = this.handleStatusClick.bind(this, statusText, index);
     });
-
     this.$(".clear-completed").onclick = this.handleClearCompleted;
   }
 
@@ -73,6 +73,22 @@ class TodoFooter extends Component {
 
     return this.props.onStatusChange &&
            this.props.onStatusChange(selectedStatus);
+  }
+
+  componentDidMount () {
+ 
+    const {todosChange, visibleTodosChange} = this.events;
+
+    todosChange.subscribe(this.updateNumTodos);
+    visibleTodosChange.subscribe(this.updateNumVisibleTodos);
+  }
+
+  componentWillUnMount () {
+  
+    const {todosChange, visibleTodosChange} = this.events;
+
+    todosChange.unSubscribe(this.updateNumTodos);
+    visibleTodosChange.unSubscribe(this.updateNumVisibleTodos);
   }
 
   render () {
