@@ -13,7 +13,7 @@ class TodoInput extends Component {
     this.handleCheckAllChange = this.handleCheckAllChange.bind(this);
   }
 
-  ready () {
+  componentWillMount () {
   
     this.form = this.$el;
     this.input = this.form.todoText;
