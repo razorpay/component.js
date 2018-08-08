@@ -1,4 +1,4 @@
-import {mount, PublisherComponent} from "component";
+import Component from "component";
 import TodoInput from "./TodoInput";
 import TodoList from "./TodoList";
 import TodoFooter from "./TodoFooter";
@@ -7,14 +7,11 @@ import "./index.styl";
 
 const hasTodosClassName = " has-todos";
 
-class TodoApp extends PublisherComponent {
+class TodoApp extends Component {
 
   constructor(props, container) {
   
     super(props, container);
-
-    this.registerEvents("todosChange", "visibleTodosChange");
-
     this.handleNewTodo = this.handleNewTodo.bind(this);
     this.statuses = ["All", "Completed", "Pending"];
     this.selectedStatus = this.statuses[0];
@@ -24,36 +21,6 @@ class TodoApp extends PublisherComponent {
     this.handleTodoStatusChange = this.handleTodoStatusChange.bind(this);
     this.handleCheckAllChange = this.handleCheckAllChange.bind(this);
     this.handleClearCompleted = this.handleClearCompleted.bind(this);
-
-    this.appendChild(
-      this.todoInput = new TodoInput(
-        {
-          onSubmit: this.handleNewTodo,
-          onCheckAllChange: this.handleCheckAllChange
-        }
-      ),
-      ".todo-input-container"
-    ).appendChild(
-      this.todoList = new TodoList(
-        {
-          onVisibleTodosChange: this.handleVisibleTodosChange,
-          onTodoStatusChange: this.handleTodoStatusChange,
-          onRemoveTodo: this.handleRemoveTodo,
-          status: this.selectedStatus
-        }
-      ),
-      ".todo-list-container"
-    ).appendChild(
-      this.todoFooter = new TodoFooter(
-        {
-          statuses: this.statuses,
-          selectedStatus: this.selectedStatus,
-          onStatusChange: this.handleStatusChange,
-          onClearCompleted: this.handleClearCompleted
-        }
-      ),
-      ".todo-footer-container"
-    );
   }
 
   toggleHasTodosClass () {
@@ -79,7 +46,7 @@ class TodoApp extends PublisherComponent {
 
   handleVisibleTodosChange () {
 
-    this.events.visibleTodosChange.trigger(this.todoList.numVisibleTodos);
+    this.todoFooter.updateNumVisibleTodos(this.todoList.numVisibleTodos);
   }
 
   handleTodoStatusChange () {
@@ -91,7 +58,7 @@ class TodoApp extends PublisherComponent {
 
     const todosLength = this.todoList.length;
 
-    this.events.todosChange.trigger(todosLength);
+    this.todoFooter.updateNumTodos(todosLength);
 
     if (!todosLength) {
     
@@ -105,7 +72,7 @@ class TodoApp extends PublisherComponent {
     const prevTodosLength = this.todoList.length;
 
     this.todoList.addTodo({text});
-    this.events.todosChange.trigger(this.todoList.length);
+    this.todoFooter.updateNumTodos(this.todoList.length);
 
     if (!prevTodosLength) {
     
@@ -123,6 +90,35 @@ class TodoApp extends PublisherComponent {
     this.todoList.clearCompleted();
   }
 
+  componentWillMount () {
+  
+    this.todoInput = new TodoInput(
+      {
+        onSubmit: this.handleNewTodo,
+        onCheckAllChange: this.handleCheckAllChange
+      },
+      this.$(".todo-input-container")
+    );
+    this.todoList = new TodoList(
+      {
+        onVisibleTodosChange: this.handleVisibleTodosChange,
+        onTodoStatusChange: this.handleTodoStatusChange,
+        onRemoveTodo: this.handleRemoveTodo,
+        status: this.selectedStatus
+      },
+      this.$(".todo-list-container")
+    );
+    this.todoFooter = new TodoFooter(
+      {
+        statuses: this.statuses,
+        selectedStatus: this.selectedStatus,
+        onStatusChange: this.handleStatusChange,
+        onClearCompleted: this.handleClearCompleted
+      },
+      this.$(".todo-footer-container")
+    );
+  }
+
   render () {
   
     return (`
@@ -135,4 +131,4 @@ class TodoApp extends PublisherComponent {
   }
 }
 
-const todoApp = mount(new TodoApp({}), document.body);
+const todoApp = new TodoApp({}, document.body);

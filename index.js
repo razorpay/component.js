@@ -1,5 +1,5 @@
 'use strict';
 
-let Component = require('./dist/index');
+const Component = require('./dist/index.js');
 
-module.exports = Component;
+module.exports = Component.default || Component;

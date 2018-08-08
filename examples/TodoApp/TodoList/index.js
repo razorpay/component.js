@@ -15,13 +15,17 @@ class TodoList extends Component {
     this.addTodo = this.addTodo.bind(this);
     this.handleTodoStatusChange = this.handleTodoStatusChange.bind(this);
     this.handleRemoveTodo = this.handleRemoveTodo.bind(this);
-
-    this.todos.forEach(this.addTodo);
   }
 
   get length () {
   
     return this.todos.length;
+  }
+
+  componentWillMount() {
+  
+    this.$todoList = this.$el;
+    this.todos.forEach(this.addTodo);
   }
 
   setVisibility (status, todo) {
@@ -73,7 +77,11 @@ class TodoList extends Component {
       index: this.todos.length,
       onStatusChange: this.handleTodoStatusChange,
       onRemoveTodo: this.handleRemoveTodo
-    }).onRender(() => {
+    });
+
+    this.todos.push(todo);
+
+    todo.onRender(() => {
 
       const isVisible = this.setVisibility(this.status, todo);
 
@@ -83,8 +91,7 @@ class TodoList extends Component {
       }
     });
 
-    this.todos.push(todo);
-    this.appendChild(todo);
+    todo.appendTo(this.$el);
   }
 
   filter(status) {

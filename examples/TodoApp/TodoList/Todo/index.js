@@ -65,7 +65,7 @@ class Todo extends Component {
            this.props.onStatusChange(this, isSynthetic);
   }
 
-  ready () {
+  componentWillMount () {
   
     const {completed} = this;
 
