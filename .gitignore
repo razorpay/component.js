@@ -5,3 +5,5 @@
 node_modules
 examples/node_modules
 examples/**/dist
+.DS_Store
+examples/.DS_Store
