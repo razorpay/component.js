@@ -52,7 +52,9 @@ class Component {
         if (this.render) {
 
           const html = this.render(props),
-                node = (this.parser || createNode)(html);
+                node = html instanceof Node
+                         ? html
+                         : (this.parser || createNode)(html);
 
           $el = node;
         }
