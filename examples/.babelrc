@@ -4,7 +4,6 @@
       "transform-jsx",
       {
         "function": "Component.createElement",
-        "useNew": "true",
         "useVariables": "true"
       }
     ],
