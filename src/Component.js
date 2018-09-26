@@ -1,8 +1,10 @@
 import "./polyfills";
 import {
   createNode,
+  createTextNode,
   deepFreeze,
   isString,
+  isNumber,
   isArray,
   isElement,
   isDefined,
@@ -50,7 +52,6 @@ class Component {
         let $el = null;
 
         if (this.render) {
-
           const html = this.render(props),
                 node = html instanceof Node
                          ? html
@@ -58,7 +59,6 @@ class Component {
 
           $el = node;
         }
-
         Object.defineProperty(this, "$el", {value: $el});
         Object.defineProperty(this, "rendered", {value: true});
         this.__renderSubscribers.forEach((fn) => fn());
@@ -187,6 +187,40 @@ class Component {
       Object.defineProperty(component, "mounted", {value: true});
       return component.componentDidMount && component.componentDidMount();
     });
+  }
+  
+  static createElement (elementName, attributes, children) {
+    const element = document.createElement(elementName);
+    
+    if (attributes) {
+      if (attributes.hasOwnProperty('className')) {
+        const classList = attributes.className.split(' ').filter(Boolean);
+        classList.forEach(className => element.classList.add(className));
+        delete attributes['className'];
+      }
+      
+      Object.keys(attributes).forEach(key => {
+        element.setAttribute(key, attributes[key]);
+      });
+    }
+    
+    if (children) {
+      children.forEach(child => {
+        if (Component.isComponent(child)) {
+          Component.mount(child, element);
+        } else if (child instanceof Node) {
+          element.appendChild(child);
+        } else if (isString(child) || isNumber(child)) {
+          element.appendChild(createTextNode(child));
+        } else if (isArray(child)) {
+          // TODO: Handle Arrays. 
+        } else {
+          console.log('dafuq is this:', child);
+        }
+      });
+    }
+    
+    return element;
   }
 }
 

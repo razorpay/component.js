@@ -85,15 +85,15 @@ class Todo extends Component {
 
     const {text} = this.props;
 
-    return(`
-      <li class="todo" style="display: none">
-        <div class="todo-check">
+    return(
+      <li className="todo" style="display: none">
+        <div className="todo-check">
           <input type="checkbox" name="check"/>
         </div>
-        <div class="todo-text">${text}</div>
-        <span class="close">&times;</span>
+        <div className="todo-text">{text}</div>
+        <span className="close">&times;</span>
       </li>
-    `);
+    );
   }
 }
 

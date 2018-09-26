@@ -56,19 +56,19 @@ class TodoInput extends Component {
 
   render () {
    
-    return (`
-      <form class="todo-input">
-        <div class="checkbox">
+    return (
+      <form className="todo-input">
+        <div className="checkbox">
           <input type="checkbox" 
                  name="checkAll"/>
         </div>
-        <div class="input">
+        <div className="input">
           <input type="text"
                  name="todoText"
                  placeholder="what needs to be done?"/>
         </div>
       </form>
-    `);
+    );
   }
 }
 

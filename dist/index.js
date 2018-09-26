@@ -117,6 +117,7 @@ var isType = function isType(type) {
   };
 };
 var isString = isType("string");
+var isNumber = isType("number");
 var isFunction = isType("function");
 var isElement = function isElement(input) {
   return input instanceof Element;
@@ -130,9 +131,14 @@ var isDefined = function isDefined(input) {
 };
 
 var node = document.createElement("div");
-function createNode(htmlString) {
 
+function createNode(htmlString) {
   node.innerHTML = htmlString.trim();
+  return node.firstChild;
+}
+
+function createTextNode(text) {
+  node.innerHTML = text;
   return node.firstChild;
 }
 
@@ -220,13 +226,11 @@ var Component = function () {
         var $el = null;
 
         if (_this.render) {
-
           var html = _this.render(props),
               node = html instanceof Node ? html : (_this.parser || createNode)(html);
 
           $el = node;
         }
-
         Object.defineProperty(_this, "$el", { value: $el });
         Object.defineProperty(_this, "rendered", { value: true });
         _this.__renderSubscribers.forEach(function (fn) {
@@ -366,6 +370,41 @@ var Component = function () {
         Object.defineProperty(component, "mounted", { value: true });
         return component.componentDidMount && component.componentDidMount();
       });
+    }
+  }, {
+    key: "createElement",
+    value: function createElement(elementName, attributes, children) {
+      var element = document.createElement(elementName);
+
+      if (attributes) {
+        if (attributes.hasOwnProperty('className')) {
+          var classList = attributes.className.split(' ').filter(Boolean);
+          classList.forEach(function (className) {
+            return element.classList.add(className);
+          });
+          delete attributes['className'];
+        }
+
+        Object.keys(attributes).forEach(function (key) {
+          element.setAttribute(key, attributes[key]);
+        });
+      }
+
+      if (children) {
+        children.forEach(function (child) {
+          if (Component.isComponent(child)) {
+            Component.mount(child, element);
+          } else if (child instanceof Node) {
+            element.appendChild(child);
+          } else if (isString(child) || isNumber(child)) {
+            element.appendChild(createTextNode(child));
+          } else if (isArray(child)) ; else {
+            console.log('dafuq is this:', child);
+          }
+        });
+      }
+
+      return element;
     }
   }]);
   return Component;

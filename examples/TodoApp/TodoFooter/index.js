@@ -76,7 +76,6 @@ class TodoFooter extends Component {
   }
 
   componentDidMount () {
- 
     const {todosChange, visibleTodosChange} = this.events;
 
     todosChange.subscribe(this.updateNumTodos);
@@ -95,22 +94,22 @@ class TodoFooter extends Component {
 
     const {statuses, selectedStatus, count} = this;
 
-    return (`
-      <div class="todo-footer">
+    return (
+      <div className="todo-footer">
         <div>
-          Showing <span class="visible-todos-counter">${count}</span>
-          of <span class="counter">${count}</span>
+          Showing <span className="visible-todos-counter">{count}</span>
+          of <span className="counter">{count}</span>
         </div>
-        <div class="statuses">
-          ${statuses.map((status) => (`
-            <div class="status${status === selectedStatus ? ' active': ""}">
-              ${status}
+        <div className="statuses">
+          {statuses.map((status) => (
+            <div className={"status" + status === selectedStatus ? " active" : "" }>
+              {status}
             </div>
-          `)).join("")}
+          ))}
         </div>
-        <div class="clear-completed">Clear Completed</div>
+        <div className="clear-completed">Clear Completed</div>
       </div>
-    `);
+    );
   }
 }
 

@@ -1,17 +1,4 @@
 {
-  "plugins": [
-    [
-      "transform-jsx",
-      {
-        "function": "Component.createElement",
-        "useVariables": "true"
-      }
-    ],
-    "transform-object-rest-spread"
-  ],
-  "presets": [
-    [
-      "env"
-    ]
-  ]
+  "plugins": ["./component-transform-jsx", "transform-object-rest-spread"],
+  "presets": ["env"]
 }

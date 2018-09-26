@@ -1,4 +1,5 @@
-import {mount, PublisherComponent} from "component";
+import Component from "component";
+const {mount, PublisherComponent} = Component;
 import TodoInput from "./TodoInput";
 import TodoList from "./TodoList";
 import TodoFooter from "./TodoFooter";
@@ -24,36 +25,6 @@ class TodoApp extends PublisherComponent {
     this.handleTodoStatusChange = this.handleTodoStatusChange.bind(this);
     this.handleCheckAllChange = this.handleCheckAllChange.bind(this);
     this.handleClearCompleted = this.handleClearCompleted.bind(this);
-
-    this.appendChild(
-      this.todoInput = new TodoInput(
-        {
-          onSubmit: this.handleNewTodo,
-          onCheckAllChange: this.handleCheckAllChange
-        }
-      ),
-      ".todo-input-container"
-    ).appendChild(
-      this.todoList = new TodoList(
-        {
-          onVisibleTodosChange: this.handleVisibleTodosChange,
-          onTodoStatusChange: this.handleTodoStatusChange,
-          onRemoveTodo: this.handleRemoveTodo,
-          status: this.selectedStatus
-        }
-      ),
-      ".todo-list-container"
-    ).appendChild(
-      this.todoFooter = new TodoFooter(
-        {
-          statuses: this.statuses,
-          selectedStatus: this.selectedStatus,
-          onStatusChange: this.handleStatusChange,
-          onClearCompleted: this.handleClearCompleted
-        }
-      ),
-      ".todo-footer-container"
-    );
   }
 
   toggleHasTodosClass () {
@@ -124,19 +95,30 @@ class TodoApp extends PublisherComponent {
   }
 
   render () {
-  
     return (
-      <TodoApp>
-        <div class="todo-input-container">
-          <TodoInput></TodoInput>
+      <div className="todo-app">
+        <div className="todo-input-container">
+          <TodoInput
+            onSubmit={this.handleNewTodo}
+            onCheckAllChange={this.handleCheckAllChange}/>
         </div>
-        <div class="todo-list-container">
-          <TodoList></TodoList>
+
+        <div className="todo-list-container">
+          <TodoList
+            onVisibleTodosChange={this.handleVisibleTodosChange}
+            onTodoStatusChange={this.handleTodoStatusChange}
+            onRemoveTodo={this.handleRemoveTodo}
+            status={this.selectedStatus}/>
         </div>
-        <div class="todo-footer-container">
-          <TodoFooter></TodoFooter>
+
+        <div className="todo-footer-container">
+          <TodoFooter
+            statuses={this.statuses}
+            selectedStatus={this.selectedStatus}
+            onStatusChange={this.handleStatusChange}
+            onClearCompleted={this.handleClearCompleted}/>
         </div>
-      </TodoApp>
+      </div>
     );
   }
 }
