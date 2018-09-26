@@ -125,13 +125,19 @@ class TodoApp extends PublisherComponent {
 
   render () {
   
-    return (`
-      <div class="todo-app">
-        <div class="todo-input-container"></div>
-        <div class="todo-list-container"></div>
-        <div class="todo-footer-container"></div>
-      </div>
-    `);
+    return (
+      <TodoApp>
+        <div class="todo-input-container">
+          <TodoInput></TodoInput>
+        </div>
+        <div class="todo-list-container">
+          <TodoList></TodoList>
+        </div>
+        <div class="todo-footer-container">
+          <TodoFooter></TodoFooter>
+        </div>
+      </TodoApp>
+    );
   }
 }
 

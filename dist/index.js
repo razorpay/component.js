@@ -222,7 +222,7 @@ var Component = function () {
         if (_this.render) {
 
           var html = _this.render(props),
-              node = (_this.parser || createNode)(html);
+              node = html instanceof Node ? html : (_this.parser || createNode)(html);
 
           $el = node;
         }
