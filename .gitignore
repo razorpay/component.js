@@ -2,9 +2,8 @@
 *.swo
 *.swn
 *.swm
-node_modules
-examples/node_modules
+**/node_modules
+**/.DS_Store
 examples/**/dist
-.DS_Store
-examples/.DS_Store
 **/.idea
+
