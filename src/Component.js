@@ -207,7 +207,7 @@ class Component {
     if (children) {
       children.forEach(child => {
         if (Component.isComponent(child)) {
-          Component.mount(child, element);
+          
         } else if (child instanceof Node) {
           element.appendChild(child);
         } else if (isString(child) || isNumber(child)) {
