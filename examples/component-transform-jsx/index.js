@@ -44,9 +44,9 @@ module.exports = function ({ types: t }) {
           attributes.properties.push(t.objectProperty(t.identifier(childrenProperty), children));
         }
         const args = attributes.properties.length ? [attributes]: [];
-        return t.newExpression(elementName, args);
+        return t.callExpression(node, [t.thisExpression(), t.newExpression(elementName, args)]);
       }
-      return t.callExpression(node, [t.stringLiteral(elementName.name), attributes, children]);
+      return t.callExpression(node, [t.thisExpression(), t.stringLiteral(elementName.name), attributes, children]);
     };
 
     if (constructorFunction) {

@@ -189,8 +189,13 @@ class Component {
     });
   }
   
-  static createElement (elementName, attributes, children) {
-    const element = document.createElement(elementName);
+  static createElement (parent, el, attributes, children) {
+    
+    const isComponent = Component.isComponent(el);
+    
+    if (isComponent || el instanceof Node) return el;
+    
+    const element = document.createElement(el);
     
     if (attributes) {
       if (attributes.hasOwnProperty('className')) {
@@ -207,15 +212,30 @@ class Component {
     if (children) {
       children.forEach(child => {
         if (Component.isComponent(child)) {
-          
-        } else if (child instanceof Node) {
-          element.appendChild(child);
-        } else if (isString(child) || isNumber(child)) {
-          element.appendChild(createTextNode(child));
-        } else if (isArray(child)) {
-          // TODO: Handle Arrays. 
+          Component.mount(child, element);
+          if (child.props.ref) {
+            parent[child.props.ref] = child;
+          }
         } else {
-          console.log('dafuq is this:', child);
+          if (child instanceof Node) {
+            element.appendChild(child);
+          } else if (isString(child) || isNumber(child)) {
+            element.appendChild(createTextNode(child));
+          } else if (isArray(child)) {
+            child.forEach(c => {
+              if (c instanceof Node) {
+                element.appendChild(c);
+              }
+              if (Component.isComponent(c)) {
+                Component.mount(c, element);
+                if (c.props.ref) {
+                  parent[c.props.ref] = c;
+                }
+              }
+            });
+          } else {
+            console.log('dafuq is this:', child);
+          }
         }
       });
     }

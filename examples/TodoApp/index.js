@@ -97,14 +97,17 @@ class TodoApp extends PublisherComponent {
   render () {
     return (
       <div className="todo-app">
+        {"a.b.c.d".split('.').map(c => c === 'c' ? <TodoInput/>: <div>{c}</div>)}
         <div className="todo-input-container">
           <TodoInput
+            ref="todoInput"
             onSubmit={this.handleNewTodo}
             onCheckAllChange={this.handleCheckAllChange}/>
         </div>
 
         <div className="todo-list-container">
           <TodoList
+            ref="todoList"
             onVisibleTodosChange={this.handleVisibleTodosChange}
             onTodoStatusChange={this.handleTodoStatusChange}
             onRemoveTodo={this.handleRemoveTodo}
@@ -113,6 +116,7 @@ class TodoApp extends PublisherComponent {
 
         <div className="todo-footer-container">
           <TodoFooter
+            ref="todoFooter"
             statuses={this.statuses}
             selectedStatus={this.selectedStatus}
             onStatusChange={this.handleStatusChange}

@@ -373,8 +373,13 @@ var Component = function () {
     }
   }, {
     key: "createElement",
-    value: function createElement(elementName, attributes, children) {
-      var element = document.createElement(elementName);
+    value: function createElement(parent, el, attributes, children) {
+
+      var isComponent = Component.isComponent(el);
+
+      if (isComponent || el instanceof Node) return el;
+
+      var element = document.createElement(el);
 
       if (attributes) {
         if (attributes.hasOwnProperty('className')) {
@@ -394,12 +399,29 @@ var Component = function () {
         children.forEach(function (child) {
           if (Component.isComponent(child)) {
             Component.mount(child, element);
-          } else if (child instanceof Node) {
-            element.appendChild(child);
-          } else if (isString(child) || isNumber(child)) {
-            element.appendChild(createTextNode(child));
-          } else if (isArray(child)) ; else {
-            console.log('dafuq is this:', child);
+            if (child.props.ref) {
+              parent[child.props.ref] = child;
+            }
+          } else {
+            if (child instanceof Node) {
+              element.appendChild(child);
+            } else if (isString(child) || isNumber(child)) {
+              element.appendChild(createTextNode(child));
+            } else if (isArray(child)) {
+              child.forEach(function (c) {
+                if (c instanceof Node) {
+                  element.appendChild(c);
+                }
+                if (Component.isComponent(c)) {
+                  Component.mount(c, element);
+                  if (c.props.ref) {
+                    parent[c.props.ref] = c;
+                  }
+                }
+              });
+            } else {
+              console.log('dafuq is this:', child);
+            }
           }
         });
       }
