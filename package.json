@@ -4,7 +4,8 @@
   "description": "",
   "main": "./index.js",
   "scripts": {
-    "build": "rollup -c"
+    "build": "rollup -c",
+    "dev": "rollup -cw"
   },
   "keywords": [],
   "author": "",
