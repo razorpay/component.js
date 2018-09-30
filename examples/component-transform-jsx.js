@@ -1,19 +1,18 @@
-const esutils = require('esutils');
-const identity = v => v;
+const babelPluginSyntaxJSX = require('babel-plugin-syntax-jsx');
+const propertyNameNeedQuotes = name => /[\-\s]/.test(name);
+const isComponent = identifier => /^([A-Z]{1})\w/.test(identifier.name);
 const capFunctionArguments = (fn, n, guard) => {
   n = guard ? undefined : n;
   n = (fn && n == null) ? fn.length : n;
   return (function () { return fn.apply(this, Array.prototype.slice.call(arguments, 0, n)); });
 };
+const identity = v => v;
 
 const childrenProperty = 'children';
 const defaultConstructorFunction = 'Component.createElement';
 
 module.exports = function ({ types: t }) {
-  /* ==========================================================================
-   * Utilities
-   * ======================================================================= */
-
+  
   const transformOnType = transforms => node => {
     const transformer = transforms[node.type];
     if (transformer) {
@@ -21,15 +20,6 @@ module.exports = function ({ types: t }) {
     }
     throw new Error(`${node.type} could not be transformed`);
   };
-
-  const isComponent = identifier => {
-    const isComponentRegex = /^([A-Z]{1})\w/; // https://regexr.com/405j4
-    return isComponentRegex.test(identifier.name);
-  };
-
-  /* ==========================================================================
-   * Initial configuration
-   * ======================================================================= */
 
   const initConfig = (path, state) => {
     const {
@@ -43,10 +33,11 @@ module.exports = function ({ types: t }) {
         if (children.hasOwnProperty('elements') && children.elements.length) {
           attributes.properties.push(t.objectProperty(t.identifier(childrenProperty), children));
         }
-        const args = attributes.properties.length ? [attributes]: [];
-        return t.callExpression(node, [t.thisExpression(), t.newExpression(elementName, args)]);
+        const args = attributes.properties && attributes.properties.length ? 
+          [t.identifier(elementName.name), attributes]: [t.identifier(elementName.name)];
+        return t.callExpression(node, args);
       }
-      return t.callExpression(node, [t.thisExpression(), t.stringLiteral(elementName.name), attributes, children]);
+      return t.callExpression(node, [t.stringLiteral(elementName.name), attributes, children]);
     };
 
     if (constructorFunction) {
@@ -64,10 +55,6 @@ module.exports = function ({ types: t }) {
     };
   };
 
-  /* =========================================================================
-   * Visitors
-   * ======================================================================= */
-
   const visitJSXElement = (path, state) => {
     if (!state.get('jsxConfig')) {
       state.set('jsxConfig', initConfig(path, state));
@@ -76,10 +63,6 @@ module.exports = function ({ types: t }) {
     const {
       jsxObjectTransformer
     } = state.get('jsxConfig');
-
-    /* ==========================================================================
-     * Node Transformers
-     * ======================================================================= */
 
     const JSXIdentifier = node => t.stringLiteral(node.name);
 
@@ -123,11 +106,13 @@ module.exports = function ({ types: t }) {
             }
 
             const attributeName = JSXAttributeName(node.name);
-            const objectKey = esutils.keyword.isIdentifierNameES6(attributeName.value)
-              ? t.identifier(attributeName.value)
-              : attributeName;
+            
+            const objectKey = propertyNameNeedQuotes(attributeName.value)
+              ? attributeName
+              : t.identifier(attributeName.value);
 
-            object.push(t.objectProperty(objectKey, JSXAttributeValue(node.value)));
+            const value = node.value !== null ? node.value : t.stringLiteral('true');
+            object.push(t.objectProperty(objectKey, JSXAttributeValue(value)));
             break;
           }
           case 'JSXSpreadAttribute': {
@@ -198,12 +183,8 @@ module.exports = function ({ types: t }) {
     path.replaceWith(JSXElement(path.node));
   };
 
-  /* ==========================================================================
-   * Plugin
-   * ======================================================================= */
-
   return {
-    inherits: require('babel-plugin-syntax-jsx'),
+    inherits: babelPluginSyntaxJSX,
     visitor: {
       JSXElement: visitJSXElement
     }
