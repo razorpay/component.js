@@ -4,9 +4,8 @@ import "./styles.styl";
 
 class TodoInput extends Component {
 
-  constructor(...args) {
-  
-    super(...args);
+  constructor(props, container) {
+    super(props, container);
 
     this.isCheckAllVisible = false;
     this.onSubmit = this.onSubmit.bind(this);
@@ -14,8 +13,7 @@ class TodoInput extends Component {
   }
 
   ready () {
-  
-    this.form = this.$el;
+    this.form = this.$('form');
     this.input = this.form.todoText;
     this.checkbox = this.form.checkAll;
     this.form.onsubmit = this.onSubmit;
@@ -57,17 +55,19 @@ class TodoInput extends Component {
   render () {
    
     return (
-      <form className="todo-input">
-        <div className="checkbox">
-          <input type="checkbox" 
-                 name="checkAll"/>
-        </div>
-        <div className="input">
-          <input type="text"
-                 name="todoText"
-                 placeholder="what needs to be done?"/>
-        </div>
-      </form>
+      <div className="todo-input-container">
+        <form className="todo-input">
+          <div className="checkbox">
+            <input type="checkbox" 
+                   name="checkAll"/>
+          </div>
+          <div className="input">
+            <input type="text"
+                   name="todoText"
+                   placeholder="what needs to be done?"/>
+          </div>
+        </form>
+      </div>
     );
   }
 }

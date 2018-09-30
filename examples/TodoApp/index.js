@@ -1,23 +1,21 @@
-import Component from "component";
-const {mount, PublisherComponent} = Component;
-import TodoInput from "./TodoInput";
-import TodoList from "./TodoList";
-import TodoFooter from "./TodoFooter";
+import Component from 'component';
+const { PublisherComponent } = Component;
+import TodoInput from './TodoInput';
+import TodoList from './TodoList';
+import TodoFooter from './TodoFooter';
 
-import "./index.styl";
+import './index.styl';
 
-const hasTodosClassName = " has-todos";
+const hasTodosClassName = ' has-todos';
 
 class TodoApp extends PublisherComponent {
 
   constructor(props, container) {
-  
     super(props, container);
 
-    this.registerEvents("todosChange", "visibleTodosChange");
-
+    this.registerEvents('todosChange', 'visibleTodosChange');
     this.handleNewTodo = this.handleNewTodo.bind(this);
-    this.statuses = ["All", "Completed", "Pending"];
+    this.statuses = ['All', 'Completed', 'Pending'];
     this.selectedStatus = this.statuses[0];
     this.handleStatusChange = this.handleStatusChange.bind(this);
     this.handleRemoveTodo = this.handleRemoveTodo.bind(this);
@@ -27,104 +25,98 @@ class TodoApp extends PublisherComponent {
     this.handleClearCompleted = this.handleClearCompleted.bind(this);
   }
 
-  toggleHasTodosClass () {
-  
+  toggleHasTodosClass() {
+
     const hasTodos = this.todoList.todos.length > 0;
     let className = this.$el.className;
 
     if (hasTodos) {
-    
+
       className = `${className}${hasTodosClassName}`;
     } else {
-    
-      className = className.replace(hasTodosClassName, "");
+
+      className = className.replace(hasTodosClassName, '');
     }
 
     this.$el.className = className;
   }
 
-  handleStatusChange (status) {
+  handleStatusChange(status) {
 
     this.todoList.filter(status);
   }
 
-  handleVisibleTodosChange () {
+  handleVisibleTodosChange() {
 
     this.events.visibleTodosChange.trigger(this.todoList.numVisibleTodos);
   }
 
-  handleTodoStatusChange () {
-  
+  handleTodoStatusChange() {
+
     this.todoInput.setCheckAll(false);
   }
 
-  handleRemoveTodo () {
+  handleRemoveTodo() {
 
     const todosLength = this.todoList.length;
 
     this.events.todosChange.trigger(todosLength);
 
     if (!todosLength) {
-    
+
       this.todoInput.setCheckAll(false);
       this.toggleHasTodosClass();
     }
   }
 
-  handleNewTodo (text) {
- 
+  handleNewTodo(text) {
+
     const prevTodosLength = this.todoList.length;
 
-    this.todoList.addTodo({text});
+    this.todoList.addTodo({ text });
     this.events.todosChange.trigger(this.todoList.length);
 
     if (!prevTodosLength) {
-    
+
       this.toggleHasTodosClass();
     }
   }
 
-  handleCheckAllChange (isChecked) {
+  handleCheckAllChange(isChecked) {
 
     this.todoList.setAllTodosStatus(isChecked);
   }
 
-  handleClearCompleted () {
-  
+  handleClearCompleted() {
+
     this.todoList.clearCompleted();
   }
 
-  render () {
+  render() {
     return (
       <div className="todo-app">
-        {"a.b.c.d".split('.').map(c => c === 'c' ? <TodoInput/>: <div>{c}</div>)}
-        <div className="todo-input-container">
-          <TodoInput
-            ref="todoInput"
-            onSubmit={this.handleNewTodo}
-            onCheckAllChange={this.handleCheckAllChange}/>
-        </div>
-
-        <div className="todo-list-container">
-          <TodoList
-            ref="todoList"
-            onVisibleTodosChange={this.handleVisibleTodosChange}
-            onTodoStatusChange={this.handleTodoStatusChange}
-            onRemoveTodo={this.handleRemoveTodo}
-            status={this.selectedStatus}/>
-        </div>
-
-        <div className="todo-footer-container">
-          <TodoFooter
-            ref="todoFooter"
-            statuses={this.statuses}
-            selectedStatus={this.selectedStatus}
-            onStatusChange={this.handleStatusChange}
-            onClearCompleted={this.handleClearCompleted}/>
-        </div>
+        <TodoInput
+          ref="todoInput"
+          onSubmit={this.handleNewTodo}
+          onCheckAllChange={this.handleCheckAllChange}
+        />
+        <TodoList
+          ref="todoList"
+          onVisibleTodosChange={this.handleVisibleTodosChange}
+          onTodoStatusChange={this.handleTodoStatusChange}
+          onRemoveTodo={this.handleRemoveTodo}
+          status={this.selectedStatus}/>
+        <TodoFooter
+          ref="todoFooter"
+          statuses={this.statuses}
+          selectedStatus={this.selectedStatus}
+          onStatusChange={this.handleStatusChange}
+          onClearCompleted={this.handleClearCompleted}/>
       </div>
     );
   }
 }
 
-const todoApp = mount(new TodoApp({}), document.body);
+const todoApp = Component.render(TodoApp, {}, document.body);
+
+

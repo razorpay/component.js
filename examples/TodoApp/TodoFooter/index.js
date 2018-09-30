@@ -1,14 +1,14 @@
-import Component from "component";
+import Component from 'component';
 
-import "./styles.styl";
+import './styles.styl';
 
 class TodoFooter extends Component {
 
-  constructor (props, container) {
-  
+  constructor(props, container) {
+
     super(props, container);
 
-    this.activeClass = " active";
+    this.activeClass = ' active';
     this.count = this.props.count || 0;
     this.statuses = this.props.statuses || [];
     this.selectedStatus = this.props.selectedStatus || this.statuses[0];
@@ -17,53 +17,52 @@ class TodoFooter extends Component {
     this.updateNumVisibleTodos = this.updateNumVisibleTodos.bind(this);
   }
 
-  ready () {
-  
-    this.$statuses = this.$$(".status");
+  ready() {
+    this.$statuses = this.$$('.status');
     this.$statuses.forEach(($status, index) => {
-    
+
       var statusText = this.statuses[index];
       $status.onclick = this.handleStatusClick.bind(this, statusText, index);
     });
-    this.$(".clear-completed").onclick = this.handleClearCompleted;
+    this.$('.clear-completed').onclick = this.handleClearCompleted;
   }
 
-  updateNumTodos (count) {
-    
-    this.$counter = this.$counter || this.$(".counter");
+  updateNumTodos(count) {
+
+    this.$counter = this.$counter || this.$('.counter');
     this.$counter.innerText = count;
   }
 
-  updateNumVisibleTodos (count) {
+  updateNumVisibleTodos(count) {
 
     this.$visibleTodosCounter = this.$visibleTodosCounter ||
-                                this.$(".visible-todos-counter");
+      this.$('.visible-todos-counter');
 
     this.$visibleTodosCounter.innerText = count;
   }
 
-  handleClearCompleted () {
-  
+  handleClearCompleted() {
+
     this.props.onClearCompleted();
   }
 
-  handleStatusClick (selectedStatus, selectedIndex) {
-  
+  handleStatusClick(selectedStatus, selectedIndex) {
+
     if (this.selectedStatus === selectedStatus) {
-    
+
       return;
     }
 
     this.$statuses.forEach(($status, index) => {
-    
+
       let className = $status.className;
 
       if (selectedIndex === index) {
-      
+
         className += this.activeClass;
       } else {
-      
-        className = className.replace(this.activeClass, "");
+
+        className = className.replace(this.activeClass, '');
       }
 
       $status.className = className;
@@ -72,42 +71,44 @@ class TodoFooter extends Component {
     this.selectedStatus = selectedStatus;
 
     return this.props.onStatusChange &&
-           this.props.onStatusChange(selectedStatus);
+      this.props.onStatusChange(selectedStatus);
   }
 
-  componentDidMount () {
-    const {todosChange, visibleTodosChange} = this.events;
+  componentDidMount() {
+    const { todosChange, visibleTodosChange } = this.events;
 
     todosChange.subscribe(this.updateNumTodos);
     visibleTodosChange.subscribe(this.updateNumVisibleTodos);
   }
 
-  componentWillUnMount () {
-  
-    const {todosChange, visibleTodosChange} = this.events;
+  componentWillUnMount() {
+
+    const { todosChange, visibleTodosChange } = this.events;
 
     todosChange.unSubscribe(this.updateNumTodos);
     visibleTodosChange.unSubscribe(this.updateNumVisibleTodos);
   }
 
-  render () {
+  render() {
 
-    const {statuses, selectedStatus, count} = this;
+    const { statuses, selectedStatus, count } = this;
 
     return (
-      <div className="todo-footer">
-        <div>
-          Showing <span className="visible-todos-counter">{count}</span>
-          of <span className="counter">{count}</span>
+      <div className="todo-footer-container">
+        <div className="todo-footer">
+          <div>
+            Showing <span className="visible-todos-counter">{count}</span>
+            {" of"} <span className="counter">{count}</span>
+          </div>
+          <div className="statuses">
+            {statuses.map((status) => (
+              <div className={'status' + (status === selectedStatus ? ' active' : '')}>
+                {status}
+              </div>
+            ))}
+          </div>
+          <div className="clear-completed">Clear Completed</div>
         </div>
-        <div className="statuses">
-          {statuses.map((status) => (
-            <div className={"status" + status === selectedStatus ? " active" : "" }>
-              {status}
-            </div>
-          ))}
-        </div>
-        <div className="clear-completed">Clear Completed</div>
       </div>
     );
   }

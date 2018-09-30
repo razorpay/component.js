@@ -1,15 +1,14 @@
-import Component from "component";
-import Todo from "./Todo";
+import Component from 'component';
+import Todo from './Todo';
 
-import "./styles.styl";
+import './styles.styl';
 
 class TodoList extends Component {
 
-  constructor(...args) {
+  constructor(props, container) {
+    super(props, container);
 
-    super(...args);
-
-    this.status = this.props.status; 
+    this.status = this.props.status;
     this.todos = this.props.todos || [];
     this.numVisibleTodos = this.todos.length;
     this.addTodo = this.addTodo.bind(this);
@@ -19,17 +18,16 @@ class TodoList extends Component {
     this.todos.forEach(this.addTodo);
   }
 
-  get length () {
-  
+  get length() {
+
     return this.todos.length;
   }
 
-  setVisibility (status, todo) {
+  setVisibility(status, todo) {
 
-
-    const shouldShow = status === "All" || 
-                       status === "Completed" && todo.completed ||
-                       status === "Pending" && !todo.completed;
+    const shouldShow = status === 'All' ||
+      status === 'Completed' && todo.completed ||
+      status === 'Pending' && !todo.completed;
 
     if (shouldShow && !todo.isVisible) {
 
@@ -51,7 +49,7 @@ class TodoList extends Component {
 
   handleTodoStatusChange(todo, isSynthetic) {
 
-    let {numVisibleTodos} = this;
+    let { numVisibleTodos } = this;
 
     this.setVisibility(this.status, todo);
 
@@ -61,13 +59,12 @@ class TodoList extends Component {
     }
 
     if (!isSynthetic) {
-    
+
       this.props.onTodoStatusChange();
     }
   }
 
   addTodo(item) {
-
     const todo = new Todo({
       ...item,
       index: this.todos.length,
@@ -91,9 +88,9 @@ class TodoList extends Component {
 
     this.status = status;
 
-    let {numVisibleTodos} = this;
+    let { numVisibleTodos } = this;
 
-    if (status !== "All") {
+    if (status !== 'All') {
 
       this.todos.forEach((todo, index) => {
 
@@ -112,7 +109,7 @@ class TodoList extends Component {
   }
 
   handleRemoveTodo(todo) {
- 
+
     todo.destroy();
 
     const index = this.todos.indexOf(todo);
@@ -129,13 +126,12 @@ class TodoList extends Component {
   }
 
   clearCompleted() {
-  
-    this.todos.filter(todo => todo.completed)
-              .forEach(this.handleRemoveTodo);
+
+    this.todos.filter(todo => todo.completed).forEach(this.handleRemoveTodo);
   }
 
-  render () {
-    return (`<ol class="todo-list"></ol>`);
+  render() {
+    return <ol className="todo-list"/>;
   }
 }
 

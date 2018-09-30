@@ -82,7 +82,7 @@ class Todo extends Component {
   }
 
   render () {
-
+    
     const {text} = this.props;
 
     return(
