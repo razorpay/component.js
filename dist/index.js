@@ -119,6 +119,9 @@ var isType = function isType(type) {
 var isString = isType("string");
 var isNumber = isType("number");
 var isFunction = isType("function");
+var isText = function isText(input) {
+  return isString(input) || isNumber(input);
+};
 var isElement = function isElement(input) {
   return input instanceof Element;
 };
@@ -134,11 +137,6 @@ var node = document.createElement("div");
 
 function createNode(htmlString) {
   node.innerHTML = htmlString.trim();
-  return node.firstChild;
-}
-
-function createTextNode(text) {
-  node.innerHTML = text;
   return node.firstChild;
 }
 
@@ -214,23 +212,37 @@ var Component = function () {
       }
     });
 
-    Object.defineProperty(this, "props", { value: deepFreeze(props || {}) });
+    props = props || {};
+
+    Object.defineProperty(this, "props", { value: deepFreeze(props) });
 
     this.__renderSubscribers = [];
 
-    if (this.render) {
+    if (props.__sync) {
+      // Prevent asynchronous render.
+      if (!this.render) {
+        console.error('Synchronous rendering requires a render function.');
+      }
 
+      return this;
+    }
+
+    if (this.render) {
       // let other things in constructor get executed
       window.setTimeout(function () {
 
         var $el = null;
 
-        if (_this.render) {
-          var html = _this.render(props),
-              node = html instanceof Node ? html : (_this.parser || createNode)(html);
+        var html = _this.render(props);
 
-          $el = node;
+        if (html instanceof Node) {
+          $el = html;
+        } else if (html instanceof VNode) {
+          $el = Component.parseVNode(html);
+        } else {
+          $el = createNode(html);
         }
+
         Object.defineProperty(_this, "$el", { value: $el });
         Object.defineProperty(_this, "rendered", { value: true });
         _this.__renderSubscribers.forEach(function (fn) {
@@ -243,7 +255,22 @@ var Component = function () {
   }
 
   createClass(Component, [{
-    key: "onRender",
+    key: 'onEl',
+    value: function onEl($el) {
+      Object.defineProperty(this, "$el", { value: $el });
+      Object.defineProperty(this, "rendered", { value: true });
+      this.__renderSubscribers.forEach(function (fn) {
+        return fn();
+      });
+      delete this.__renderSubscribers;
+
+      Object.defineProperty(this, "mounted", { value: true });
+      this.componentDidMount && this.componentDidMount();
+
+      return this.ready && this.ready();
+    }
+  }, {
+    key: 'onRender',
     value: function onRender(fn) {
 
       if (this.rendered) {
@@ -257,7 +284,7 @@ var Component = function () {
       return this;
     }
   }, {
-    key: "addEventListener",
+    key: 'addEventListener',
     value: function addEventListener() {
 
       if (this.$el) {
@@ -269,7 +296,7 @@ var Component = function () {
       return this;
     }
   }, {
-    key: "removeEventListener",
+    key: 'removeEventListener',
     value: function removeEventListener() {
 
       if (this.$el) {
@@ -281,7 +308,7 @@ var Component = function () {
       return this;
     }
   }, {
-    key: "appendChild",
+    key: 'appendChild',
     value: function appendChild(child, $el) {
       var _this2 = this;
 
@@ -325,7 +352,7 @@ var Component = function () {
       });
     }
   }, {
-    key: "destroy",
+    key: 'destroy',
     value: function destroy() {
 
       if (this.componentWillUnMount) {
@@ -338,25 +365,25 @@ var Component = function () {
       return $container && $container.removeChild(this.$el);
     }
   }, {
-    key: "$",
+    key: '$',
     value: function $(selector) {
 
       return this.$el && this.$el.querySelector(selector) || null;
     }
   }, {
-    key: "$$",
+    key: '$$',
     value: function $$(selector) {
 
       return this.$el && this.$el.querySelectorAll(selector) || null;
     }
   }], [{
-    key: "isComponent",
+    key: 'isComponent',
     value: function isComponent(input) {
 
       return input instanceof Component;
     }
   }, {
-    key: "mount",
+    key: 'mount',
     value: function mount(component, target) {
 
       if (!isElement(target) || !Component.isComponent(component) || component.mounted) {
@@ -372,65 +399,99 @@ var Component = function () {
       });
     }
   }, {
-    key: "createElement",
-    value: function createElement(parent, el, attributes, children) {
+    key: 'render',
+    value: function render(_Component, props, container, parentComponent) {
+      props.__sync = true;
+      var component = new _Component(props, container);
+      var vNode = component.render();
+      var DOMNode = Component.parseVNode(vNode, component);
 
-      var isComponent = Component.isComponent(el);
-
-      if (isComponent || el instanceof Node) return el;
-
-      var element = document.createElement(el);
-
-      if (attributes) {
-        if (attributes.hasOwnProperty('className')) {
-          var classList = attributes.className.split(' ').filter(Boolean);
-          classList.forEach(function (className) {
-            return element.classList.add(className);
-          });
-          delete attributes['className'];
-        }
-
-        Object.keys(attributes).forEach(function (key) {
-          element.setAttribute(key, attributes[key]);
-        });
+      if (parentComponent && parentComponent.context) {
+        component.context = parentComponent.context;
       }
 
-      if (children) {
-        children.forEach(function (child) {
-          if (Component.isComponent(child)) {
-            Component.mount(child, element);
-            if (child.props.ref) {
-              parent[child.props.ref] = child;
-            }
+      if (isObject(props) && props.hasOwnProperty('ref')) {
+        parentComponent[props.ref] = component;
+      }
+
+      if (container) {
+        container.appendChild(DOMNode);
+      }
+
+      component.onEl(DOMNode);
+
+      return component;
+    }
+  }, {
+    key: 'parseVNode',
+    value: function parseVNode(vNode, parentComponent) {
+      if (!(vNode instanceof VNode)) {
+        console.error(vNode, 'is not an instance of vNode.');
+      }
+
+      var nodeType = vNode.nodeType,
+          props = vNode.props,
+          children = vNode.children;
+
+
+      var childNodes = [];
+
+      if (isArray(children)) {
+        children.forEach(function processChild(child) {
+          if (child instanceof VNode) {
+            childNodes.push(Component.parseVNode(child, parentComponent));
+          } else if (isText(child)) {
+            childNodes.push(document.createTextNode(child));
+          } else if (isArray(child)) {
+            child.forEach(processChild);
           } else {
-            if (child instanceof Node) {
-              element.appendChild(child);
-            } else if (isString(child) || isNumber(child)) {
-              element.appendChild(createTextNode(child));
-            } else if (isArray(child)) {
-              child.forEach(function (c) {
-                if (c instanceof Node) {
-                  element.appendChild(c);
-                }
-                if (Component.isComponent(c)) {
-                  Component.mount(c, element);
-                  if (c.props.ref) {
-                    parent[c.props.ref] = c;
-                  }
-                }
-              });
-            } else {
-              console.log('dafuq is this:', child);
-            }
+            console.error(child, 'has an unknown child type.');
           }
         });
       }
 
-      return element;
+      if (isString(nodeType)) {
+        var DOMNode = document.createElement(nodeType);
+
+        if (isObject(props)) {
+          if (props.className) {
+            DOMNode.className = props.className;
+            delete props.className;
+          }
+          Object.keys(props).forEach(function (k) {
+            return DOMNode.setAttribute(k, props[k]);
+          });
+        }
+
+        if (childNodes) {
+          childNodes.forEach(function (child) {
+            return DOMNode.appendChild(child);
+          });
+        }
+
+        return DOMNode;
+      } else if (isFunction(nodeType) && nodeType.constructor === Component.constructor) {
+        return Component.render(nodeType, props, null, parentComponent).$el;
+      } else {
+        console.error(nodeType, 'is an unknown type.');
+      }
+    }
+  }, {
+    key: 'createElement',
+    value: function createElement(nodeType, props, children) {
+      return new VNode(nodeType, props, children);
     }
   }]);
   return Component;
 }();
+
+var VNode = function VNode(nodeType, props, children) {
+  classCallCheck(this, VNode);
+
+  this.nodeType = nodeType;
+  this.props = props;
+  this.children = children;
+};
 
 var getEvent = function getEvent() {
 
@@ -465,16 +526,10 @@ var getEvent = function getEvent() {
 var PublisherComponent = function (_Component) {
   inherits(PublisherComponent, _Component);
 
-  function PublisherComponent() {
-    var _ref;
-
+  function PublisherComponent(props, container) {
     classCallCheck(this, PublisherComponent);
 
-    for (var _len2 = arguments.length, props = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-      props[_key2] = arguments[_key2];
-    }
-
-    var _this = possibleConstructorReturn(this, (_ref = PublisherComponent.__proto__ || Object.getPrototypeOf(PublisherComponent)).call.apply(_ref, [this].concat(props)));
+    var _this = possibleConstructorReturn(this, (PublisherComponent.__proto__ || Object.getPrototypeOf(PublisherComponent)).call(this, props, container));
 
     _this.events = {};
     _this.context = { "events": _this.events };
@@ -514,8 +569,8 @@ var PublisherComponent = function (_Component) {
     value: function registerEvents() {
       var _this2 = this;
 
-      for (var _len3 = arguments.length, eventNames = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-        eventNames[_key3] = arguments[_key3];
+      for (var _len2 = arguments.length, eventNames = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        eventNames[_key2] = arguments[_key2];
       }
 
       eventNames.forEach(function (name) {
