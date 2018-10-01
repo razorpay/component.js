@@ -13,11 +13,8 @@ class TodoInput extends Component {
   }
 
   ready () {
-    this.form = this.$('form');
-    this.input = this.form.todoText;
-    this.checkbox = this.form.checkAll;
+    
     this.form.onsubmit = this.onSubmit;
-
     this.checkbox.onchange = this.handleCheckAllChange;
   }
 
@@ -56,15 +53,17 @@ class TodoInput extends Component {
    
     return (
       <div className="todo-input-container">
-        <form className="todo-input">
-          <div className="checkbox">
+        <form className="todo-input" ref="form">
+          <div className="checkbox" ref="checkbox">
             <input type="checkbox" 
                    name="checkAll"/>
           </div>
           <div className="input">
             <input type="text"
                    name="todoText"
-                   placeholder="what needs to be done?"/>
+                   placeholder="what needs to be done?"
+                   ref="input"
+            />
           </div>
         </form>
       </div>

@@ -270,6 +270,10 @@ class Component {
           DOMNode.className = props.className;
           delete props.className;
         }
+        if (props.hasOwnProperty('ref')) {
+          parentComponent[props.ref] = DOMNode;
+          delete props.ref;
+        }
         Object.keys(props).forEach(k => DOMNode.setAttribute(k, props[k]));
       }
       

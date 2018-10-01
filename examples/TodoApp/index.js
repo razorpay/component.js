@@ -94,7 +94,7 @@ class TodoApp extends PublisherComponent {
 
   render() {
     return (
-      <div className="todo-app">
+      <div className="todo-app" ref="todoApp">
         <TodoInput
           ref="todoInput"
           onSubmit={this.handleNewTodo}

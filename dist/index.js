@@ -144,37 +144,17 @@ function deepFreeze(object) {
 
   var propNames = Object.getOwnPropertyNames(object);
 
-  var _iteratorNormalCompletion = true;
-  var _didIteratorError = false;
-  var _iteratorError = undefined;
+  for (var key in propNames) {
 
-  try {
-    for (var _iterator = propNames[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-      var name = _step.value;
+    var name = propNames[key];
+    var value = object[name];
 
-
-      var value = object[name];
-
-      try {
-
-        object[name] = value;
-      } catch (e) {/* the prop is not writable */}
-
-      value && (typeof value === "undefined" ? "undefined" : _typeof(value)) === "object" ? deepFreeze(value) : value;
-    }
-  } catch (err) {
-    _didIteratorError = true;
-    _iteratorError = err;
-  } finally {
     try {
-      if (!_iteratorNormalCompletion && _iterator.return) {
-        _iterator.return();
-      }
-    } finally {
-      if (_didIteratorError) {
-        throw _iteratorError;
-      }
-    }
+
+      object[name] = value;
+    } catch (e) {/* the prop is not writable */}
+
+    value && (typeof value === "undefined" ? "undefined" : _typeof(value)) === "object" ? deepFreeze(value) : value;
   }
 
   return Object.freeze(object);
@@ -257,6 +237,7 @@ var Component = function () {
   createClass(Component, [{
     key: 'onEl',
     value: function onEl($el) {
+
       Object.defineProperty(this, "$el", { value: $el });
       Object.defineProperty(this, "rendered", { value: true });
       this.__renderSubscribers.forEach(function (fn) {
@@ -401,6 +382,7 @@ var Component = function () {
   }, {
     key: 'render',
     value: function render(_Component, props, container, parentComponent) {
+
       props.__sync = true;
       var component = new _Component(props, container);
       var vNode = component.render();
@@ -425,6 +407,7 @@ var Component = function () {
   }, {
     key: 'parseVNode',
     value: function parseVNode(vNode, parentComponent) {
+
       if (!(vNode instanceof VNode)) {
         console.error(vNode, 'is not an instance of vNode.');
       }
@@ -457,6 +440,10 @@ var Component = function () {
           if (props.className) {
             DOMNode.className = props.className;
             delete props.className;
+          }
+          if (props.hasOwnProperty('ref')) {
+            parentComponent[props.ref] = DOMNode;
+            delete props.ref;
           }
           Object.keys(props).forEach(function (k) {
             return DOMNode.setAttribute(k, props[k]);
@@ -526,10 +513,16 @@ var getEvent = function getEvent() {
 var PublisherComponent = function (_Component) {
   inherits(PublisherComponent, _Component);
 
-  function PublisherComponent(props, container) {
+  function PublisherComponent() {
+    var _ref;
+
     classCallCheck(this, PublisherComponent);
 
-    var _this = possibleConstructorReturn(this, (PublisherComponent.__proto__ || Object.getPrototypeOf(PublisherComponent)).call(this, props, container));
+    for (var _len2 = arguments.length, props = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      props[_key2] = arguments[_key2];
+    }
+
+    var _this = possibleConstructorReturn(this, (_ref = PublisherComponent.__proto__ || Object.getPrototypeOf(PublisherComponent)).call.apply(_ref, [this].concat(props)));
 
     _this.events = {};
     _this.context = { "events": _this.events };
@@ -569,8 +562,8 @@ var PublisherComponent = function (_Component) {
     value: function registerEvents() {
       var _this2 = this;
 
-      for (var _len2 = arguments.length, eventNames = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-        eventNames[_key2] = arguments[_key2];
+      for (var _len3 = arguments.length, eventNames = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+        eventNames[_key3] = arguments[_key3];
       }
 
       eventNames.forEach(function (name) {
