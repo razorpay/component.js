@@ -24,8 +24,9 @@ export function deepFreeze(object) {
 
   var propNames = Object.getOwnPropertyNames(object);
 
-  for (let name of propNames) {
-
+  for (let key in propNames) {
+    
+    const name = propNames[key];
     let value = object[name];
 
     try {
