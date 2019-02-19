@@ -1,4 +1,14 @@
 {
-  "plugins": ["./component-transform-jsx", "transform-object-rest-spread"],
-  "presets": ["env"]
+  "plugins": [
+    [
+      "transform-react-jsx",
+      {
+        "pragma": "Component.createElement"
+      }
+    ],
+    "transform-object-rest-spread"
+  ],
+  "presets": [
+    "env"
+  ]
 }
