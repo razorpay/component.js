@@ -6,3 +6,6 @@ updates:
     interval: daily
     time: "04:00"
     timezone: Asia/Calcutta
+  allow:
+    - dependency-type: "production"
+  open-pull-requests-limit: 0
