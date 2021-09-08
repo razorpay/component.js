@@ -8,3 +8,4 @@ updates:
     timezone: Asia/Calcutta
   allow:
     - dependency-type: "production"
+  open-pull-requests-limit: 0
