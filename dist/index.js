@@ -132,7 +132,7 @@ var isDefined = function isDefined(input) {
 var node = document.createElement("div");
 function createNode(htmlString) {
 
-  node.innerHTML = htmlString.trim();
+  node.innerHTML = htmlString.trim(); // nosemgrep : insecure-innerhtml
   return node.firstChild;
 }
 

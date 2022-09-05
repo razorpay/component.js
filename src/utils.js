@@ -9,7 +9,7 @@ export const isDefined = input => input !== void 0;
 const node = document.createElement("div");
 export function createNode (htmlString) {
 
-  node.innerHTML = htmlString.trim();
+  node.innerHTML = htmlString.trim(); // nosemgrep : insecure-innerhtml
   return node.firstChild;
 }
 
