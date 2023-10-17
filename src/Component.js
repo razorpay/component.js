@@ -166,6 +166,11 @@ class Component {
     return this.$el && this.$el.querySelectorAll(selector) || null;
   }
 
+  mountTo(target) {
+
+    return Component.mount(this, target);
+  }
+
   static isComponent (input) {
 
     return input instanceof Component;
