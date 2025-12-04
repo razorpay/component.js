@@ -27,5 +27,8 @@
   },
   "dependencies": {
     "component": "git+ssh://git@github.com/razorpay/component.js.git"
+  },
+  "overrides": {
+    "fsevents": "^2.3.3"
   }
 }

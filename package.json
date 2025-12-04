@@ -18,5 +18,8 @@
     "rollup-plugin-babel": "^3.0.7",
     "rollup-plugin-node-resolve": "^3.3.0"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "overrides": {
+    "fsevents": "^2.3.3"
+  }
 }
